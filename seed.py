@@ -19,7 +19,7 @@ def makeRequest(from_id, page):
 
 def addToDB(c, req):
     for user in req:
-        insertion = "INSERT INTO users VALUES ({},'{}', '{}','{}','{}')"
+        insertion = "INSERT INTO user VALUES ({},'{}', '{}','{}','{}')"
         c.execute(insertion.format(user["id"], user["login"], user["avatar_url"], user["type"], user["html_url"]))
         if user == req[-1]:
             return user["id"]
@@ -49,8 +49,8 @@ def main(argv):
         sys.exit(2)
     conn = sqlite3.connect('gh_users.db')
     c = conn.cursor()
-    c.execute("DROP TABLE IF EXISTS users")
-    c.execute("CREATE TABLE users(id integer, username text, img_url text, type text, link_url text)")
+    c.execute("DROP TABLE IF EXISTS user")
+    c.execute("CREATE TABLE user(id integer, username text, img_url text, type text, link_url text)")
     handlePagination(c, total)
     conn.commit()
     conn.close()
