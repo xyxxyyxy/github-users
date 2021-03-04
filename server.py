@@ -64,7 +64,6 @@ def index():
     query = "SELECT * FROM user ORDER BY {} COLLATE NOCASE {} LIMIT {} OFFSET {}"
     res = c.execute(query.format(sort, direction, limit, offset))
     users = [toHtml(*x) for x in res]
-    print(users)
     queryCount = "SELECT count(*) from user"
     res2 = c.execute(queryCount)
     pagination = Pagination(page=page, per_page=limit, total=c.fetchone()[0], search=None, record_name='Users', css_framework='bulma')
