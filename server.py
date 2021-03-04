@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Markup, request, redirect, session, url_for
+from flask import Flask, render_template, Markup, request, redirect, session, url_for, jsonify
 from flask_paginate import Pagination, get_page_parameter
 import sqlite3
 
@@ -6,12 +6,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '3b^DFxM7Z?7s3ZByu5C%JN7%8*8dbxS_'
 
 
-class User(object):
-    def __init__(self, id, username, image, type, link):
-        self.id = id
-        self.username = Markup('<a href="{}">{}</button>'.format(link, username))
-        self.image = Markup('<figure class="image is-32x32"><img src="{}"></figure>'.format(image))
-        self.type = type
+def toHtml(id, username, image, type, link):
+    return (id, Markup('<a href="{}">{}</button>'.format(link, username)),
+        Markup('<figure class="image is-32x32"><img src="{}"></figure>'.format(image)), type)
+def toDict(id, username, image, type, link):
+    return {"id": id, "username": username, "image": image, "link": link}
 
 
 
@@ -26,6 +25,7 @@ def index():
     if request.method == 'POST':
         limit = request.form['limit']
         return redirect(url_for('index', limit=limit))
+
     sort = request.args.get('sort', None)
     direction = request.args.get('direction', None)
     limit = request.args.get('limit', type=int, default=None)
@@ -55,22 +55,42 @@ def index():
         session['limit'] = limit
         session['direction'] = direction
     
-
-
-
     if not page:
             page = 1
     offset = (page-1)*limit
     direction = direction.upper()
     conn = sqlite3.connect('gh_users.db')
     c = conn.cursor()
-    query = "SELECT * from user ORDER BY {} COLLATE NOCASE {} LIMIT {} OFFSET {}"
+    query = "SELECT * FROM user ORDER BY {} COLLATE NOCASE {} LIMIT {} OFFSET {}"
     res = c.execute(query.format(sort, direction, limit, offset))
-    users = [User(*x) for x in res]
+    users = [toHtml(*x) for x in res]
+    print(users)
     queryCount = "SELECT count(*) from user"
     res2 = c.execute(queryCount)
     pagination = Pagination(page=page, per_page=limit, total=c.fetchone()[0], search=None, record_name='Users', css_framework='bulma')
     return render_template('index.html', users=users, pagination=pagination)
+
+
+@app.route("/api/profiles", methods=['GET'])
+def profiles():
+    sort = request.args.get('sort', "id")
+    direction = request.args.get('direction', "asc")
+    limit = request.args.get('limit', type=int, default=25)
+    page = request.args.get('page', type=int, default=1)
+    username = request.args.get('username', default="")
+    offset = (page-1)*limit
+    direction = direction.upper()
+    conn = sqlite3.connect('gh_users.db')
+    c = conn.cursor()
+    query = "SELECT * FROM user WHERE username LIKE '%{}%'ORDER BY {} COLLATE NOCASE {} LIMIT {} OFFSET {}"
+    res = c.execute(query.format(username, sort, direction, limit, offset))
+    users = [toDict(*x) for x in res]
+    queryCount = "SELECT count(*) from user WHERE username LIKE '%{}%'".format(username)
+    res2 = c.execute(queryCount)
+    total = c.fetchone()[0]
+    if total == 0:
+        return jsonify({"error": "no users found"}), 404
+    return jsonify({"total": total, "data": users}), 200
 
 
 if __name__ == '__main__':

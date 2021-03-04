@@ -54,10 +54,10 @@
   <tbody>
     {% for elem in users %}
     <tr>
-      <td>{{ elem.id }}</td>
-      <td>{{ elem.username }}</td>
-      <td>{{ elem.image }}</td>
-      <td>{{ elem.type }}</td>
+      <td>{{ elem[0] }}</td>
+      <td>{{ elem[1] }}</td>
+      <td>{{ elem[2] }}</td>
+      <td>{{ elem[3] }}</td>
     </tr>
     {% endfor %}
   </tbody>
