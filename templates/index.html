@@ -2,6 +2,7 @@
 <head>
 <title>Github Users</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 </head>
 <body>
     <section class = "hero is-small is-link">
@@ -10,7 +11,57 @@
     </div>
     </section>
         <div class="table-container" style = "padding: 0.9rem;">
-            {{ table|safe }}
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+  <thead>
+    <tr>
+      <th>
+        <span>ID</span>
+        <a href="{{ url_for('index', sort='id', direction='asc')}}">
+        <span class="icon is-small is-pulled-right">
+          <i class="fas fa-chevron-up" aria-hidden="true"></i>
+        </span>
+        <a href="{{ url_for('index', sort='id', direction='desc')}}">
+        <span class="icon is-small is-pulled-right">
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </span>
+      </a>
+    </th>
+    <th>
+        <span>Username</span>
+        <a href="{{ url_for('index', sort='username', direction='asc')}}">
+        <span class="icon is-small is-pulled-right">
+          <i class="fas fa-chevron-up" aria-hidden="true"></i>
+        </span>
+        <a href="{{ url_for('index', sort='username', direction='desc')}}">
+        <span class="icon is-small is-pulled-right">
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </span>
+    </th>
+      <th>Image</th>
+      <th>
+        <span>Type</span>
+        <a href="{{ url_for('index', sort='type', direction='asc')}}">
+        <span class="icon is-small is-pulled-right">
+          <i class="fas fa-chevron-up" aria-hidden="true"></i>
+        </span>
+        <a href="{{ url_for('index', sort='type', direction='desc')}}">
+        <span class="icon is-small is-pulled-right">
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </span>
+      </th>
+     </tr>
+  </thead>
+  <tbody>
+    {% for elem in users %}
+    <tr>
+      <td>{{ elem.id }}</td>
+      <td>{{ elem.username }}</td>
+      <td>{{ elem.image }}</td>
+      <td>{{ elem.type }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
         </div>
     <footer>
         <div class = "container pl-3 is-flex is-justify-content-center">
