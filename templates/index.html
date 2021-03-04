@@ -1,0 +1,39 @@
+<!doctype html>
+<head>
+<title>Github Users</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+</head>
+<body>
+    <section class = "hero is-small is-link">
+        <div class = "hero-body has-text-centered">
+        <h1 class = "title is-size-4">Github Users</h1>
+    </div>
+    </section>
+        <div class="table-container" style = "padding: 0.9rem;">
+            {{ table|safe }}
+        </div>
+    <footer>
+        <div class = "container pl-3 is-flex is-justify-content-center">
+        <nav class = "level">
+            <div class = "level-left">
+                <div class = "level-item">
+                <div>
+                {{ pagination.links }}
+                </div>
+            </div>
+            </div>
+            <div class = "level-right">
+                <div class = "level-item pl-4">
+                <form method="POST">
+                <div class = "is-block">
+                    <input class="input" type="text" placeholder="25" name="limit" style = "width: 25%;">
+                    <button type="submit" class = "button is-link">Change Result Size</button>
+                </div>
+            </form>
+        </div>
+        </div>
+        </nav>
+           <div>
+
+    </footer>
+</body>
