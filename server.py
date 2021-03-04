@@ -10,7 +10,7 @@ def toHtml(id, username, image, type, link):
     return (id, Markup('<a href="{}">{}</button>'.format(link, username)),
         Markup('<figure class="image is-32x32"><img src="{}"></figure>'.format(image)), type)
 def toDict(id, username, image, type, link):
-    return {"id": id, "username": username, "image": image, "link": link}
+    return {"id": id, "username": username, "image": image, "link": link, "type": type}
 
 
 
