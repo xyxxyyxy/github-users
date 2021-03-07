@@ -1,3 +1,4 @@
 Flask==1.1.2
 flask-paginate==0.8.1
 gunicorn==20.0.4
+pytest==5.4.3
