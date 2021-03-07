@@ -79,3 +79,93 @@ def test_profiles__empty__query__success():
     data = json.loads(response.get_data(as_text=True))
     assert response.status_code == 200
     assert data["total"] == 80
+
+def test_profiles__empty__query__one__user__success():
+    app = Flask(__name__)
+    configure_routes(app)
+    client = app.test_client()
+    url = '/api/profiles'
+
+    data = {
+        "sort": "username",
+        "direction": "asc",
+        "limit": 25,
+        "page": 1,
+        "username": "danwrong"
+    }
+
+    response = client.get(url, query_string = data)
+    data = json.loads(response.get_data(as_text=True))
+    assert response.status_code == 200
+    assert data["total"] == 1
+    assert data["data"][0]["id"] == 110
+
+def test_default__empty__success():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = '3b^DFxM7Z?7s3ZByu5C%JN7%8*8dbxS_'
+    configure_routes(app)
+    client = app.test_client()
+    url = '/'
+
+    data = {
+        "page": 1,
+    }
+
+    response = client.get(url, query_string = data)
+    assert response.status_code == 200
+    assert b'Github Users' in response.data
+    assert b'jamesgolick' not in response.data
+    assert b'KirinDave' in response.data
+
+def test_default__empty__success2():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = '3b^DFxM7Z?7s3ZByu5C%JN7%8*8dbxS_'
+    configure_routes(app)
+    client = app.test_client()
+    url = '/'
+
+    data = {
+        "page": 1,
+    }
+
+    response = client.get(url, query_string = data)
+    assert response.status_code == 200
+    assert b'Github Users' in response.data
+    assert b'jamesgolick' not in response.data
+    assert b'KirinDave' in response.data
+
+def test_default__empty__success3():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = '3b^DFxM7Z?7s3ZByu5C%JN7%8*8dbxS_'
+    configure_routes(app)
+    client = app.test_client()
+    url = '/'
+
+    data = {
+        "page": 1,
+        "sort": "type",
+        "direction": "asc"
+    }
+
+    response = client.get(url, query_string = data)
+    assert response.status_code == 200
+    assert b'Github Users' in response.data
+    assert b'Organization' in response.data
+
+def test_default__empty__success3():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = '3b^DFxM7Z?7s3ZByu5C%JN7%8*8dbxS_'
+    configure_routes(app)
+    client = app.test_client()
+    url = '/'
+
+    data = {
+        "page": 1,
+        "sort": "type",
+        "direction": "desc"
+    }
+
+    response = client.get(url, query_string = data)
+    assert response.status_code == 200
+    assert b'Github Users' in response.data
+    assert b'Organization' not in response.data
